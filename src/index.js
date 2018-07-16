@@ -23,23 +23,38 @@ class Row extends React.Component {
 class SearchBar extends React.Component {
 	constructor(props) {
 		super(props);
-		this.handleFilterTextChange = this.handleFilterTextChange.bind(this);
+		this.handleFilterDateChange = this.handleFilterDateChange.bind(this);
+		this.handleFilterTaskChange = this.handleFilterTaskChange.bind(this);
 	}
 
-	handleFilterTextChange(e) {
-		this.props.onFilterTextChange(e.target.value);
+	handleFilterDateChange(e) {
+		this.props.onFilterDateChange(e.target.value);
+	}
+
+	handleFilterTaskChange(e) {
+		this.props.onFilterTaskChange(e.target.value);
 	}
 
 	render() {
 		return (
 			<form>
 				<span>Search:  </span>
+				<span>
 				<input
 				  type="text"
 				  placeholder="Date (MM/DD/YYYY)"
-				  value={this.props.filterText}
-				  onChange={this.handleFilterTextChange}
+				  value={this.props.filterDateText}
+				  onChange={this.handleFilterDateChange}
 				/>
+				</span>
+				<span>
+				<input
+				  type="text"
+				  placeholder="Task Name"
+				  value={this.props.filterTaskText}
+				  onChange={this.handleFilterTaskChange}
+				/>
+				</span>
 			</form>
 		);
 	}
@@ -48,11 +63,15 @@ class SearchBar extends React.Component {
 //class ShowTable -- shows the table
 class ShowTable extends React.Component {
 	render() {
-		const filterText = this.props.filterText;
+		const filterDateText = this.props.filterDateText;
+		const filterTaskText = this.props.filterTaskText;
 		const rows = [];
 
 		this.props.tasks.forEach((task) => {
-			if (task.date.indexOf(filterText) === -1) {
+			if (task.date.indexOf(filterDateText) === -1) {
+				return;
+			}
+			if (task.task.indexOf(filterTaskText) === -1) {
 				return;
 			}
 			rows.push(
@@ -83,15 +102,23 @@ class ShowAll extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			filterText: '',
+			filterDateText: '',
+			filterTaskText: '',
 		};
 
-		this.handleFilterTextChange = this.handleFilterTextChange.bind(this);
+		this.handleFilterDateChange = this.handleFilterDateChange.bind(this);
+		this.handleFilterTaskChange = this.handleFilterTaskChange.bind(this);
 	}
 
-	handleFilterTextChange(filterText) {
+	handleFilterDateChange(filterDateText) {
 		this.setState({
-			filterText: filterText
+			filterDateText: filterDateText
+		});
+	}
+
+	handleFilterTaskChange(filterTaskText) {
+		this.setState({
+			filterTaskText: filterTaskText
 		});
 	}
 
@@ -100,13 +127,16 @@ class ShowAll extends React.Component {
 			<div>
 				<p>
 					<SearchBar
-					  filterText={this.state.filterText}
-					  onFilterTextChange={this.handleFilterTextChange}
+					  filterDateText={this.state.filterDateText}
+					  filterTaskText={this.state.filterTaskText}
+					  onFilterTaskChange={this.handleFilterTaskChange}
+					  onFilterDateChange={this.handleFilterDateChange}
 					/>
 				</p>
 				<ShowTable
 				  tasks={this.props.tasks}
-				  filterText={this.state.filterText}
+				  filterDateText={this.state.filterDateText}
+				  filterTaskText={this.state.filterTaskText}
 				/>
 			</div>
 		);
@@ -119,6 +149,7 @@ const TASKS = [
 	{date: '07/16/2018', task: 'Dishes', frequency: '1'},
 	{date: '07/16/2018', task: 'Clean closet', frequency: '60'},
 	{date: '05/23/2018', task: 'Clean desk', frequency: '60'},
+	{date: '12/22/2016', task: 'Test React app', frequency: '20'},
 ]
 
 ReactDOM.render(
