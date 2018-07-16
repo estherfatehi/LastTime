@@ -1,0 +1,24 @@
+table {
+  width: 100%;
+}
+
+th {
+  padding: 15px;
+  color: purple;
+  font-size: large;
+  font-family: Comic Sans MS, Comic Sans, cursive;
+}
+
+td {
+  padding: 10px;
+  text-align: center;
+  font-family: Comic Sans MS, Comic Sans, cursive;
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+input {
+  text-align:center;
+}
