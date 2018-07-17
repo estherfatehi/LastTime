@@ -84,6 +84,7 @@ class ShowTable extends React.Component {
 		});
 
 		return(
+			<div>
 				<table>
 					<thead>
 						<tr>
@@ -94,10 +95,52 @@ class ShowTable extends React.Component {
 					</thead>
 					<tbody>{rows}</tbody>
 				</table>
+			</div>
 		);
 	}
 }
 
+//class to add a new task
+class AddNewTask extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {dateValue: '', taskValue: ''};
+		this.addRow = this.addRow.bind(this);
+	}
+
+	handleChange(e) {
+		let change = {}
+    	change[e.target.name] = e.target.value
+		this.setState(change)
+	}
+
+	render() {
+		return (
+			<div>
+			<input
+				  type="text"
+				  placeholder="New Date (MM/DD/YYYY)"
+				  name="dateValue"
+				  onChange={this.handleChange.bind(this)}
+				/>
+			<input
+				  type="text"
+				  placeholder="New Task Name"
+				  name="taskValue"
+				  onChange={this.handleChange.bind(this)}
+				/>
+			<button type="button" onClick={this.addRow}>{this.props.name}</button>
+
+			</div>
+		);
+	}
+
+	addRow() {
+		alert("adding date with " + this.state.dateValue+" and " + this.state.taskValue);
+	}
+}
+
+//parent class to show all components together
 class ShowAll extends React.Component {
 	constructor(props) {
 		super(props);
@@ -125,7 +168,7 @@ class ShowAll extends React.Component {
 	render() {
 		return (
 			<div>
-				<p>
+				<p align="center">
 					<SearchBar
 					  filterDateText={this.state.filterDateText}
 					  filterTaskText={this.state.filterTaskText}
@@ -133,11 +176,19 @@ class ShowAll extends React.Component {
 					  onFilterDateChange={this.handleFilterDateChange}
 					/>
 				</p>
+				<span>
+				<p align="center">
+					<AddNewTask name="ADD NEW TASK"
+					/>
+				</p>
+				</span>
+				<span>
 				<ShowTable
 				  tasks={this.props.tasks}
 				  filterDateText={this.state.filterDateText}
 				  filterTaskText={this.state.filterTaskText}
 				/>
+				</span>
 			</div>
 		);
 	}	
