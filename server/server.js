@@ -11,9 +11,9 @@ const conn = mysql.createConnection({
 const app = express();
 app.set('port', 3001);
 
-app.get('*', (req, res)=>{
-	res.sendFile(path.join(__dirname, '../build/index.html'));
-})
+// app.get('*', (req, res)=>{
+// 	res.sendFile(path.join(__dirname, '../build/index.html'));
+// })
 
 conn.connect(function(err) {
 	if (err) {
