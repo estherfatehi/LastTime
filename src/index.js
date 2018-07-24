@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+
 //class for the individual rows
 class Row extends React.Component {
 	render() {
@@ -62,6 +63,13 @@ class SearchBar extends React.Component {
 
 //class ShowTable -- shows the table
 class ShowTable extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {rows: []};
+	}
+	//is it possible to put in tasks as a prop and get rid of rows completely?
+	//pass in ShowTable to AddRow and update it as a state?
+
 	render() {
 		const filterDateText = this.props.filterDateText;
 		const filterTaskText = this.props.filterTaskText;
@@ -145,6 +153,7 @@ class ShowAll extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			data: '',
 			filterDateText: '',
 			filterTaskText: '',
 		};
@@ -152,6 +161,27 @@ class ShowAll extends React.Component {
 		this.handleFilterDateChange = this.handleFilterDateChange.bind(this);
 		this.handleFilterTaskChange = this.handleFilterTaskChange.bind(this);
 	}
+
+
+  componentDidMount() {
+  	var request = new XMLHttpRequest();
+
+  	request.open('GET', "/test", true);
+    request.onload = function(e){
+      if (request.readyState === 4){
+        if (request.status === 200){
+          this.setState({
+            data: request.responseText
+          })
+        } else {
+          console.error(request.statusText)
+        }
+      }
+    }.bind(this)
+
+  	request.send(null);
+
+  }
 
 	handleFilterDateChange(filterDateText) {
 		this.setState({
@@ -189,6 +219,7 @@ class ShowAll extends React.Component {
 				  filterTaskText={this.state.filterTaskText}
 				/>
 				</span>
+				{this.state.data}
 			</div>
 		);
 	}	
