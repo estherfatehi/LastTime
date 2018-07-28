@@ -17,8 +17,8 @@ Front end is made in React.
 8) Download NodeJS: ```$ curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -```</br>
 9) Install NodeJS: ```$ sudo apt-get install -y nodejs```<br>
 10) ```$ npm --version``` should say 5.6.0 and ```$ node --version``` should say v8.11.3 (7/25/2018) <br>
-11) Download MySQL: ```$ sudo apt install mysql-server```<br>
-12) Install MySQL: ```$ sudo mysql_secure_installation```<br>
+11) Install MySQL: ```$ sudo apt install mysql-server```<br>
+12) Configure MySQL: ```$ sudo mysql_secure_installation```<br>
 13) Validate password? N, enter in your new password, answer Y for all future questions<br>
 14) Enter MySQL console: ```$ sudo mysql```<br>
 15) Create a new user, new database, new table, and insert some values into Tasks table for testing purposes: 
