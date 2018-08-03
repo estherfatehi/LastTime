@@ -6,13 +6,15 @@ import './index.css';
 //class for the individual rows
 class Row extends React.Component {
 	render() {
-		const date = this.props.date;
+		const date = String(this.props.date).split('-');
+		var third_date = date[2].split('T');
+		var formatted_date = date[1] + '-' + third_date[0] + '-' + date[0];
 		const task = this.props.task;
 		const frequency = this.props.frequency;
 
 		return (
 			<tr>
-				<td>{date}</td>
+				<td>{formatted_date}</td>
 				<td>{task}</td>
 				<td>{frequency} days</td>
 			</tr>
@@ -65,28 +67,52 @@ class SearchBar extends React.Component {
 class ShowTable extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {rows: []};
+		this.state = {
+			data: [],
+			rows: []
+		};
 	}
 	//is it possible to put in tasks as a prop and get rid of rows completely?
 	//pass in ShowTable to AddRow and update it as a state?
+
+  componentDidMount() {
+  	var request = new XMLHttpRequest();
+
+  	request.open('GET', "/test", true);
+    request.onload = function(e){
+      if (request.readyState === 4){
+        if (request.status === 200){
+          this.setState({
+            data: JSON.parse(request.responseText)
+          })
+        } else {
+          console.error(request.statusText)
+        }
+      }
+    }.bind(this)
+
+  	request.send(null);
+
+  }
 
 	render() {
 		const filterDateText = this.props.filterDateText;
 		const filterTaskText = this.props.filterTaskText;
 		const rows = [];
-
-		this.props.tasks.forEach((task) => {
-			if (task.date.indexOf(filterDateText) === -1) {
+		
+		this.state.data.map((task) => {
+			console.log(task);
+			if (task.LastDate.indexOf(filterDateText) === -1) {
 				return;
 			}
-			if (task.task.indexOf(filterTaskText) === -1) {
+			if (task.TaskName.indexOf(filterTaskText) === -1) {
 				return;
 			}
 			rows.push(
 				<Row
-					date={task.date}
-					task={task.task}
-					frequency={task.frequency}
+					date={task.LastDate}
+					task={task.TaskName}
+					frequency={task.Frequency}
 				/>
 			);
 		});
@@ -153,7 +179,6 @@ class ShowAll extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			data: '',
 			filterDateText: '',
 			filterTaskText: '',
 		};
@@ -161,27 +186,6 @@ class ShowAll extends React.Component {
 		this.handleFilterDateChange = this.handleFilterDateChange.bind(this);
 		this.handleFilterTaskChange = this.handleFilterTaskChange.bind(this);
 	}
-
-
-  componentDidMount() {
-  	var request = new XMLHttpRequest();
-
-  	request.open('GET', "/test", true);
-    request.onload = function(e){
-      if (request.readyState === 4){
-        if (request.status === 200){
-          this.setState({
-            data: request.responseText
-          })
-        } else {
-          console.error(request.statusText)
-        }
-      }
-    }.bind(this)
-
-  	request.send(null);
-
-  }
 
 	handleFilterDateChange(filterDateText) {
 		this.setState({
@@ -214,27 +218,16 @@ class ShowAll extends React.Component {
 				</span>
 				<span>
 				<ShowTable
-				  tasks={this.props.tasks}
 				  filterDateText={this.state.filterDateText}
 				  filterTaskText={this.state.filterTaskText}
 				/>
 				</span>
-				{this.state.data}
 			</div>
 		);
 	}	
 }
 
-const TASKS = [
-	{date: '07/12/2018', task: 'Laundry', frequency: '7'},
-	{date: '06/22/2018', task: 'Change sheets', frequency: '14'},
-	{date: '07/16/2018', task: 'Dishes', frequency: '1'},
-	{date: '07/16/2018', task: 'Clean closet', frequency: '60'},
-	{date: '05/23/2018', task: 'Clean desk', frequency: '60'},
-	{date: '12/22/2016', task: 'Test React app', frequency: '20'},
-]
-
 ReactDOM.render(
-	<ShowAll tasks={TASKS} />,
+	<ShowAll />,
 	document.getElementById('root')
 );
