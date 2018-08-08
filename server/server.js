@@ -23,17 +23,29 @@ conn.connect(function(err) {
 	console.log('connected as id ' + conn.threadId);
 });
 
-app.get('/test', function(req, res, next) {
+//returns a json object of all the tasks
+app.get('/alltasks', function(req, res, next) {
 	var context = {};
-	conn.query('SELECT * FROM Tasks', function(err, rows, fields) {
+	conn.query('SELECT * FROM Tasks ORDER BY LastDate', function(err, rows, fields) {
 		if (err) {
 			next(err);
 			return;
 		}
 
 		context.results = rows;
-		console.log(context);
 		res.send(rows);
+	});
+});
+
+//inserts values into table
+app.get('/insert', function(req, res, next) {
+	conn.query("INSERT INTO Tasks (`LastDate`, `TaskName`, `Frequency`) VALUES (?, ?, ?)", ([req.query.date, req.query.taskname, req.query.frequency]), function(err, result) {
+		if (err) {
+			next(err);
+			return;
+		}
+		console.log(result);
+		res.send(result);
 	});
 });
 

@@ -45,7 +45,7 @@ class SearchBar extends React.Component {
 				<span>
 				<input
 				  type="text"
-				  placeholder="Date (MM/DD/YYYY)"
+				  placeholder="Date (MM-DD-YYYY)"
 				  value={this.props.filterDateText}
 				  onChange={this.handleFilterDateChange}
 				/>
@@ -78,7 +78,7 @@ class ShowTable extends React.Component {
   componentDidMount() {
   	var request = new XMLHttpRequest();
 
-  	request.open('GET', "/test", true);
+  	request.open('GET', "/alltasks", true);
     request.onload = function(e){
       if (request.readyState === 4){
         if (request.status === 200){
@@ -99,7 +99,7 @@ class ShowTable extends React.Component {
 		const filterDateText = this.props.filterDateText;
 		const filterTaskText = this.props.filterTaskText;
 		const rows = [];
-		
+
 		this.state.data.map((task) => {
 			console.log(task);
 			if (task.LastDate.indexOf(filterDateText) === -1) {
@@ -153,14 +153,20 @@ class AddNewTask extends React.Component {
 			<div>
 			<input
 				  type="text"
-				  placeholder="New Date (MM/DD/YYYY)"
-				  name="dateValue"
+				  placeholder="Date (YYYY-MM-DD)"
+				  name="date"
 				  onChange={this.handleChange.bind(this)}
 				/>
 			<input
 				  type="text"
-				  placeholder="New Task Name"
-				  name="taskValue"
+				  placeholder="Task Name"
+				  name="taskname"
+				  onChange={this.handleChange.bind(this)}
+				/>
+			<input
+				  type="number"
+				  placeholder="Frequency (days)"
+				  name="frequency"
 				  onChange={this.handleChange.bind(this)}
 				/>
 			<button type="button" onClick={this.addRow}>{this.props.name}</button>
@@ -170,7 +176,19 @@ class AddNewTask extends React.Component {
 	}
 
 	addRow() {
-		alert("adding date with " + this.state.dateValue+" and " + this.state.taskValue);
+		var req = new XMLHttpRequest();
+
+		req.open('GET', "/insert?date=" + this.state.date + "&taskname=" + this.state.taskname + "&frequency=" + this.state.frequency, true);
+		req.addEventListener('load', function() {
+			if (req.status >= 200 && req.status < 400) {
+				console.log("Success!");
+			}
+			else {
+				console.log("Error in network request: " + req.status);
+			}
+		});
+		req.send(null);
+
 	}
 }
 
